@@ -51,15 +51,22 @@ El notebook aplica ~40 tests estadísticos independientes sobre los 5 sistemas:
 
 ```
 analisis-loteria-chile/
-├── analisis_loteria_completo.ipynb   # Notebook principal con análisis completo
-├── loto.py                           # Scraper Loto (formato HTML nuevo, sorteos ~4333+)
-├── loto1.py                          # Scraper Loto (formato HTML antiguo, sorteos anteriores)
-├── kino.py                           # Scraper Kino
-├── loto_principal.csv                # Datos Loto principal
-├── loto_recargado.csv                # Datos Loto Recargado
-├── loto_revancha.csv                 # Datos Loto Revancha
-├── loto_desquite.csv                 # Datos Loto Desquite
-├── kino_principal.csv                # Datos Kino
+├── data/                             # Datasets (CSV)
+│   ├── loto_principal.csv
+│   ├── loto_recargado.csv
+│   ├── loto_revancha.csv
+│   ├── loto_desquite.csv
+│   ├── kino_principal.csv
+│   ├── kino_chao_jefe_2m.csv
+│   ├── kino_chao_jefe_3m.csv
+│   └── kino_super_combo.csv
+├── scrapers/                         # Scripts de extracción
+│   ├── loto.py                       # Loto (formato HTML nuevo)
+│   ├── loto1.py                      # Loto (formato HTML antiguo)
+│   ├── kino.py                       # Kino principal
+│   └── kino_completo.py              # Kino + juegos complementarios
+├── analisis_loteria_completo.ipynb   # Análisis principal (Loto + Kino)
+├── analisis_kino_complementarios.ipynb # Replicación en bombos del Kino
 ├── README.md
 └── LICENSE
 ```
