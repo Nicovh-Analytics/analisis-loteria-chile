@@ -106,7 +106,8 @@ Los CSVs ya están incluidos en el repositorio. Para actualizar los datos, ejecu
 
 ## Próximos pasos
 
-- [ ] Agregar juegos complementarios del Kino (replicación Bonferroni en segundo formato)
+- [x] Agregar juegos complementarios del Kino (Chao Jefe 2M/3M, Super Combo) — replicación Bonferroni en segundo formato
+- [ ] Completar ReKino, RequeteKino y Premios Especiales (pendiente depurar extracción del scraper)
 - [ ] Ampliar cobertura de datos: solicitar dataset completo a Polla Chilena de Beneficencia vía transparencia
 - [ ] Explorar fuentes alternativas para sorteos antiguos (archivo de prensa, Diario Oficial)
 - [ ] Visualizaciones interactivas
