@@ -18,6 +18,7 @@ Selectores HTML (verificados con DevTools):
  
 import requests
 from bs4 import BeautifulSoup
+from comun import pedir, abrir_atomico
 import csv
 import time
 import os
@@ -90,7 +91,7 @@ def encontrar_secciones(soup):
 def scrape_sorteo(numero):
     """Scrapea un sorteo completo. Retorna dict con todos los datos o None."""
     url = f"https://chileresultados.com/loto/sorteos/{numero}"
-    resp = requests.get(url, headers=HEADERS, timeout=15)
+    resp = pedir(url, HEADERS)
     
     if resp.status_code != 200:
         return None
@@ -206,7 +207,7 @@ def main():
     
     # 1. LOTO PRINCIPAL
     archivo_loto = os.path.join(CARPETA, "loto_principal.csv")
-    with open(archivo_loto, "w", newline="", encoding="utf-8") as f:
+    with abrir_atomico(archivo_loto) as f:
         writer = csv.writer(f)
         writer.writerow(["sorteo", "n1", "n2", "n3", "n4", "n5", "n6", "comodin"])
         for r in resultados:
@@ -218,7 +219,7 @@ def main():
     # 2. RECARGADO
     archivo_rec = os.path.join(CARPETA, "loto_recargado.csv")
     con_recargado = [r for r in resultados if "recargado" in r]
-    with open(archivo_rec, "w", newline="", encoding="utf-8") as f:
+    with abrir_atomico(archivo_rec) as f:
         writer = csv.writer(f)
         writer.writerow(["sorteo", "n1", "n2", "n3", "n4", "n5", "n6"])
         for r in con_recargado:
@@ -228,7 +229,7 @@ def main():
     # 3. REVANCHA
     archivo_rev = os.path.join(CARPETA, "loto_revancha.csv")
     con_revancha = [r for r in resultados if "revancha" in r]
-    with open(archivo_rev, "w", newline="", encoding="utf-8") as f:
+    with abrir_atomico(archivo_rev) as f:
         writer = csv.writer(f)
         writer.writerow(["sorteo", "n1", "n2", "n3", "n4", "n5", "n6"])
         for r in con_revancha:
@@ -238,7 +239,7 @@ def main():
     # 4. DESQUITE
     archivo_des = os.path.join(CARPETA, "loto_desquite.csv")
     con_desquite = [r for r in resultados if "desquite" in r]
-    with open(archivo_des, "w", newline="", encoding="utf-8") as f:
+    with abrir_atomico(archivo_des) as f:
         writer = csv.writer(f)
         writer.writerow(["sorteo", "n1", "n2", "n3", "n4", "n5", "n6"])
         for r in con_desquite:

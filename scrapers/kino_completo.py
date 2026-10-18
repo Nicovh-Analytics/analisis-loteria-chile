@@ -27,6 +27,7 @@ Estructura HTML (verificada con DevTools):
 
 import requests
 from bs4 import BeautifulSoup
+from comun import pedir, abrir_atomico
 import csv
 import time
 import os
@@ -104,7 +105,7 @@ def scrape_sorteo(numero):
     url = f"https://chileresultados.com/kino/sorteos/{numero}"
 
     try:
-        resp = requests.get(url, headers=HEADERS, timeout=15)
+        resp = pedir(url, HEADERS)
     except requests.RequestException:
         return None
 
@@ -167,7 +168,7 @@ def guardar_csv(nombre, datos, num_bolillas):
         print(f"  {nombre}: sin datos, no se genera CSV")
         return
 
-    with open(archivo, "w", newline="", encoding="utf-8") as f:
+    with abrir_atomico(archivo) as f:
         writer = csv.writer(f)
         header = ["sorteo"] + [f"n{i}" for i in range(1, num_bolillas + 1)]
         writer.writerow(header)

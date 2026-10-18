@@ -18,6 +18,7 @@ Los selectores HTML son los mismos que el Loto en este sitio:
 
 import requests
 from bs4 import BeautifulSoup
+from comun import pedir, abrir_atomico
 import csv
 import time
 import os
@@ -103,7 +104,7 @@ def encontrar_seccion_principal(soup):
 def scrape_sorteo(numero):
     """Scrapea un sorteo del Kino. Retorna dict o None."""
     url = f"https://chileresultados.com/kino/sorteos/{numero}"
-    resp = requests.get(url, headers=HEADERS, timeout=15)
+    resp = pedir(url, HEADERS)
 
     if resp.status_code != 200:
         return None
@@ -181,7 +182,7 @@ def main():
 
     # Guardar CSV — 14 columnas de números
     archivo = os.path.join(CARPETA, "kino_principal.csv")
-    with open(archivo, "w", newline="", encoding="utf-8") as f:
+    with abrir_atomico(archivo) as f:
         writer = csv.writer(f)
         header = ["sorteo"] + [f"n{i}" for i in range(1, NUM_BOLILLAS + 1)]
         writer.writerow(header)
