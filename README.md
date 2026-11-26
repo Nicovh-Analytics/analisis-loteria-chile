@@ -12,19 +12,19 @@ Investigar si existe estructura explotable en los resultados históricos de la l
 
 | Sistema | Estructura | Sorteos | Bombo |
 |---|---|---|---|
-| Loto principal | 6 de 41 | ~1.222 | físicamente independiente |
-| Loto Recargado | 6 de 41 | ~1.128 | físicamente independiente |
-| Loto Revancha | 6 de 41 | ~1.222 | físicamente independiente |
-| Loto Desquite | 6 de 41 | ~1.222 | físicamente independiente |
-| Kino | 14 de 25 | ~889 | estructura distinta |
+| Loto principal | 6 de 41 | 1.253 | físicamente independiente |
+| Loto Recargado | 6 de 41 | 1.158 | físicamente independiente |
+| Loto Revancha | 6 de 41 | 1.252 | físicamente independiente |
+| Loto Desquite | 6 de 41 | 1.252 | físicamente independiente |
+| Kino | 14 de 25 | 889 | estructura distinta |
 
-Fuente: [chileresultados.com](https://www.chileresultados.com), extraídos por web scraping (agosto 2026).
+Fuente: [chileresultados.com](https://www.chileresultados.com), extraídos por web scraping (agosto 2026; actualizados en noviembre 2026).
 
 ## Metodología
 
 El notebook aplica ~40 tests estadísticos independientes sobre los 5 sistemas:
 
-- **Uniformidad** — Chi-cuadrado de bondad de ajuste por bombo
+- **Uniformidad** — Chi-cuadrado de bondad de ajuste por bombo, ajustado por extracción sin reemplazo
 - **Valores extremos** — Simulación Monte Carlo del "número caliente" esperado
 - **Paridad, suma y memoria** — Comparación contra valores teóricos
 - **Estadísticos de orden** — Distribución posicional vs predicción combinatoria exacta
@@ -38,14 +38,20 @@ El notebook aplica ~40 tests estadísticos independientes sobre los 5 sistemas:
 
 | Análisis | Resultado |
 |---|---|
-| Uniformidad (χ², 5 sistemas) | Todos uniformes, p > 0.5 |
+| Uniformidad (χ² ajustado, 5 sistemas) | Todos uniformes (p entre 0.40 y 0.95) |
 | Valores extremos (número caliente) | Fluctuación normal (~2σ), no sesgo |
 | Paridad / suma / memoria | Coinciden con la teoría |
 | Estadísticos de orden | r > 0.97 vs combinatoria pura |
 | Apilamiento condicional | Mejora 1.00x (identidad matemática) |
 | 4 bombos independientes | Replicación con Bonferroni |
 | Kino (estructura opuesta) | Misma conclusión |
-| Límite de detección física | Sin sesgos groseros; los finos son irrelevantes |
+| Límite de detección física | Se descartan sesgos groseros (+50%); los finos serían irrelevantes |
+
+## Corrección metodológica (noviembre 2026)
+
+La primera versión usaba `scipy.stats.chisquare` y simulaciones multinomiales, que suponen extracción **con reemplazo**. En un sorteo los números de cada extracción son distintos, así que las frecuencias varían menos de lo que esos métodos suponen: bajo la hipótesis nula, el χ² promedia N−K y no N−1 (Loto: 35 en vez de 40; Kino: 11 en vez de 24). Con eso los p-values salían inflados (Kino principal 0.99 → 0.43; Loto Desquite 0.63 → 0.40), la simulación de valores extremos marcaba como "fuera de rango" calientes normales del Kino, y el poder estadístico quedaba subestimado.
+
+La pista estaba en los propios resultados: los cuatro χ² del Kino rondaban 11. Se corrigió en [`sorteos.py`](sorteos.py) (χ² reescalado por (N−1)/(N−K) y simulación de sorteos sin reemplazo) y se verificó que, bajo la hipótesis nula, el test corregido rechaza el 5% de las veces a α = 0.05. **La conclusión no cambia:** ningún bombo rechaza uniformidad tras Bonferroni. Detalle en la sección 8.1 del notebook.
 
 ## Estructura del proyecto
 
@@ -66,6 +72,7 @@ analisis-loteria-chile/
 │   ├── loto1.py                      # Loto (formato HTML antiguo)
 │   ├── kino.py                       # Kino principal
 │   └── kino_completo.py              # Kino + juegos complementarios
+├── sorteos.py                        # χ² y simulación para sorteos sin reemplazo
 ├── analisis_loteria.ipynb            # Análisis principal (Loto + Kino)
 ├── analisis_kino_complementarios.ipynb # Replicación en bombos del Kino
 ├── requirements.txt                  # Versiones exactas
@@ -101,8 +108,8 @@ Los CSVs ya están incluidos en el repositorio. Para actualizar los datos, ejecu
 
 ## Limitaciones declaradas
 
-- **Cobertura parcial de datos:** chileresultados.com no cubre la totalidad de los sorteos históricos. El Loto tiene ~5.400 sorteos totales pero la fuente solo entrega ~1.222. Los sorteos más antiguos no están disponibles en el sitio y requerirían fuentes alternativas (archivo de Polla, prensa histórica, Diario Oficial).
-- **Poder estadístico limitado:** con ~1.200 sorteos, solo se detectan sesgos groseros (>50%). Un sesgo del 2% sería indetectable, pero también irrelevante en las odds.
+- **Cobertura parcial de datos:** chileresultados.com no cubre la totalidad de los sorteos históricos. El Loto tiene ~5.500 sorteos totales pero la fuente solo entrega ~1.250. Los sorteos más antiguos no están disponibles en el sitio y requerirían fuentes alternativas (archivo de Polla, prensa histórica, Diario Oficial).
+- **Poder estadístico limitado:** con ~1.250 sorteos, un número con +30% de peso se detecta la mitad de las veces y solo uno con +50% casi siempre. Un sesgo del 2% sería indetectable, pero también irrelevante en las odds.
 - **Datos vs proceso:** los datos son resultados públicos, no las condiciones físicas del sorteo. El análisis mide la salida, no el proceso.
 - No se descarta la existencia de un sesgo minúsculo — se demuestra que, de existir, sería inexplotable.
 
