@@ -61,12 +61,14 @@ analisis-loteria-chile/
 │   ├── kino_chao_jefe_3m.csv
 │   └── kino_super_combo.csv
 ├── scrapers/                         # Scripts de extracción
+│   ├── comun.py                      # Reintentos con backoff y escritura atómica
 │   ├── loto.py                       # Loto (formato HTML nuevo)
 │   ├── loto1.py                      # Loto (formato HTML antiguo)
 │   ├── kino.py                       # Kino principal
 │   └── kino_completo.py              # Kino + juegos complementarios
-├── analisis_loteria_completo.ipynb   # Análisis principal (Loto + Kino)
+├── analisis_loteria.ipynb            # Análisis principal (Loto + Kino)
 ├── analisis_kino_complementarios.ipynb # Replicación en bombos del Kino
+├── requirements.txt                  # Versiones exactas
 ├── README.md
 └── LICENSE
 ```
@@ -75,18 +77,18 @@ analisis-loteria-chile/
 
 1. Clonar el repositorio:
 ```bash
-git clone https://github.com/nicovh-analytics/analisis-loteria-chile.git
+git clone https://github.com/Nicovh-Analytics/analisis-loteria-chile.git
 cd analisis-loteria-chile
 ```
 
 2. Instalar dependencias:
 ```bash
-pip install pandas numpy scipy
+pip install -r requirements.txt
 ```
 
 3. Abrir el notebook:
 ```bash
-jupyter notebook analisis_loteria_completo.ipynb
+jupyter notebook analisis_loteria.ipynb
 ```
 
 Los CSVs ya están incluidos en el repositorio. Para actualizar los datos, ejecutar los scrapers.
