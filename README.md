@@ -47,6 +47,10 @@ El notebook aplica ~40 tests estadísticos independientes sobre los 5 sistemas:
 | Kino (estructura opuesta) | Misma conclusión |
 | Límite de detección física | Se descartan sesgos groseros (+50%); los finos serían irrelevantes |
 
+![Frecuencia de cada número en los 4 bombos del Loto](docs/frecuencias_loto.png)
+
+Ningún número se aleja más de ~15% de lo esperado, y entre 0 y 2 por bombo quedan fuera de la franja de ±2σ, lo esperable por azar. El más frecuente es distinto en cada bombo.
+
 ## Corrección metodológica (noviembre 2026)
 
 La primera versión usaba `scipy.stats.chisquare` y simulaciones multinomiales, que suponen extracción **con reemplazo**. En un sorteo los números de cada extracción son distintos, así que las frecuencias varían menos de lo que esos métodos suponen: bajo la hipótesis nula, el χ² promedia N−K y no N−1 (Loto: 35 en vez de 40; Kino: 11 en vez de 24). Con eso los p-values salían inflados (Kino principal 0.99 → 0.43; Loto Desquite 0.63 → 0.40), la simulación de valores extremos marcaba como "fuera de rango" calientes normales del Kino, y el poder estadístico quedaba subestimado.
@@ -102,7 +106,7 @@ Los CSVs ya están incluidos en el repositorio. Para actualizar los datos, ejecu
 
 ## Stack técnico
 
-- **Python 3** — pandas, numpy, scipy
+- **Python 3** — pandas, numpy, scipy, matplotlib
 - **Jupyter Notebook** — análisis reproducible
 - **BeautifulSoup / requests** — web scraping
 
